@@ -21,7 +21,7 @@ git clone https://github.com/ReAliens/school-library.git
 
 cd school-library
 
-ruby person.rb
+ruby main.rb
 ```
 
 ### Prerequisites
