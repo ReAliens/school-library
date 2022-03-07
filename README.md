@@ -39,6 +39,12 @@ ruby main.rb
 - Email: ahmedreda152@gmail.com
 
 
+👤 **Chimwemwe**
+
+- GitHub: [@Chimwemwe-127001](https://github.com/Chimwemwe-127001)
+- Twitter: [@Chimwewme](https://twitter.com/Chimwewme)
+- Email: sinyinzachimwemwe@gmail.com
+
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!
