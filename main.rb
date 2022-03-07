@@ -1,3 +1,4 @@
+require_relative 'handlers'
 require_relative 'person'
 require_relative 'student'
 require_relative 'book'
@@ -6,6 +7,7 @@ require_relative 'teacher'
 require_relative 'rental'
 
 class App
+  include Handlers
   def initialize
     @people = []
     @books = []
@@ -13,7 +15,7 @@ class App
   end
 
   def start
-    puts 'Welcome to School Library!'
+    puts 'Welcome to School Library! 😀'
     loop do
       menu
       option = gets.chomp
@@ -26,14 +28,14 @@ class App
 
   def menu
     puts
-    puts 'Please select an option by entering an option number:'
-    puts '1 - List all books'
-    puts '2 - List all people'
-    puts '3 - Create a person'
-    puts '4 - Create a book'
-    puts '5 - Create a rental'
-    puts '6 - List all rentals for a given person id'
-    puts '7 - Exit'
+    puts ['Please select an option by entering an option number:😊',
+          '1 - List all books 📖',
+          '2 - List all people 👪',
+          '3 - Create a person 👨',
+          '4 - Create a book 📖',
+          '5 - Create a rental 🏠,',
+          '6 - List all rentals for a given person id 👨',
+          '7 - Exit 🚫']
   end
 
   def get_num(option)
@@ -51,52 +53,8 @@ class App
     when '6'
       list_rentals_by_person_id
     else
-      puts 'Please select a number between 1 and 7.'
+      puts 'Please select a number between 1 and 7. ❌'
     end
-  end
-
-  def list_all_books
-    puts 'No books in the database! Please add a book.' if @books.empty?
-
-    @books.each { |book| puts "Title: #{book.title}, Author: #{book.author}" }
-    sleep 0.75
-  end
-
-  def list_all_people
-    puts 'No people in the database! Please add a person.' if @people.empty?
-    @people.map { |person| puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}" }
-    sleep 0.75
-  end
-
-  def create_person
-    print 'Would you like to create a student(1) or a teacher(2) [Please input a number]: '
-    option = gets.chomp
-
-    case option
-    when '1'
-      create_student
-    when '2'
-      create_teacher
-    else
-      puts 'Invalid option. Please select 1 or 2'
-    end
-  end
-
-  def create_student
-    print 'Age: '
-    age = gets.chomp.to_i
-
-    print 'Name: '
-    name = gets.chomp
-
-    print 'Has parent permission? [Y/N]: '
-    parent_permission = gets.chomp.downcase
-
-    student = Student.new(@class, age, name, parent_permission)
-    @people << student
-
-    puts 'Student created successfully'
-    sleep 0.75
   end
 
   def create_teacher
@@ -161,8 +119,8 @@ def list_rentals_by_person_id
   puts 'Rentals:'
   @rentals.each do |rental|
     puts "Date: #{rental.date}, Book '#{rental.book.title}' by #{rental.book.author}" if rental.person.id == id
+    sleep 0.75
   end
-  sleep 0.75
 end
 
 def main
