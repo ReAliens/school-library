@@ -44,8 +44,8 @@ module Handlers
     print 'Has parent permission? [Y/N]: '
     parent_permission = gets.chomp.downcase
 
-    student = Student.new(@class, age, name, parent_permission)
-    @people << student
+    student = Student.new(name: name, age: age, parent_permission: parent_permission, classroom: @classroom)
+    @people.push(student)
 
     puts 'Student created successfully'
     sleep 0.75
@@ -61,7 +61,7 @@ module Handlers
     print 'Specialization: '
     specialization = gets.chomp
 
-    teacher = Teacher.new(age, specialization, name)
+    teacher = Teacher.new(age:age, specialization:specialization, name:name)
     @people << teacher
 
     puts 'Teacher created successfully'

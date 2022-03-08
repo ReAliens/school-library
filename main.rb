@@ -1,4 +1,5 @@
 require_relative 'handlers'
+require_relative 'classroom'
 
 class App
   include Handlers
@@ -6,6 +7,7 @@ class App
     @people = []
     @books = []
     @rentals = []
+    @classroom = Classroom.new('programmers')
   end
 
   def start
