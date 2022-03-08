@@ -61,7 +61,7 @@ module Handlers
     print 'Specialization: '
     specialization = gets.chomp
 
-    teacher = Teacher.new(age:age, specialization:specialization, name:name)
+    teacher = Teacher.new(age: age, specialization: specialization, name: name)
     @people << teacher
 
     puts 'Teacher created successfully'
