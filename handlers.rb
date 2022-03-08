@@ -4,6 +4,7 @@ require_relative 'book'
 require_relative 'classroom'
 require_relative 'teacher'
 require_relative 'rental'
+require 'json'
 
 module Handlers
   def list_all_books
@@ -80,38 +81,86 @@ module Handlers
     puts 'Book added successfully'
     sleep 0.75
   end
-end
 
-def create_rental
-  puts 'Select a book from the following list by number'
-  @books.each_with_index { |book, index| puts "#{index}) Title: #{book.title}, Author: #{book.author}" }
+  def create_rental
+    puts 'Select a book from the following list by number'
+    @books.each_with_index { |book, index| puts "#{index}) Title: #{book.title}, Author: #{book.author}" }
+    book_id = gets.chomp.to_i
+    puts 'Select a person from the following list by number (not id)'
+    @people.each_with_index do |person, index|
+      puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
 
-  book_id = gets.chomp.to_i
+      person_id = gets.chomp.to_i
 
-  puts 'Select a person from the following list by number (not id)'
-  @people.each_with_index do |person, index|
-    puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+      print 'Date: '
+      date = gets.chomp.to_s
+
+      rental = Rental.new(date, @books[book_id], @people[person_id])
+      @rentals << rental
+
+      puts 'Rental created successfully'
+      sleep 0.75
+    end
   end
 
-  person_id = gets.chomp.to_i
+  def list_rentals_by_person_id
+    print 'ID of person: '
+    id = gets.chomp.to_i
 
-  print 'Date: '
-  date = gets.chomp.to_s
+    puts 'Rentals:'
+    @rentals.each do |rental|
+      puts "Date: #{rental.date}, Book '#{rental.book.title}' by #{rental.book.author}" if rental.person.id == id
+      sleep 0.75
+    end
+  end
 
-  rental = Rental.new(date, @books[book_id], @people[person_id])
-  @rentals << rental
+  def store_data
+    File.write('books.json', JSON.generate(@books))
+    File.write('people.json', JSON.generate(@people))
+    File.write('rentals.json', JSON.generate(@rentals))
+  end
 
-  puts 'Rental created successfully'
-  sleep 0.75
-end
+  def parse_books
+    file = 'books.json'
+    return [] unless File.exist? file
 
-def list_rentals_by_person_id
-  print 'ID of person: '
-  id = gets.chomp.to_i
+    data = JSON.parse(File.read(file), create_additions: true)
+    data.each do |book|
+      @books.push(Book.new(book['title'], book['author']))
+    end
+  end
 
-  puts 'Rentals:'
-  @rentals.each do |rental|
-    puts "Date: #{rental.date}, Book '#{rental.book.title}' by #{rental.book.author}" if rental.person.id == id
-    sleep 0.75
+  def parse_people
+    file = 'people.json'
+    return [] unless File.exist? file
+
+    JSON.parse(File.read(file)).map do |people|
+      if people['json_class'] == 'Student'
+        student = Student.new(age: people['age'], name: people['name'], parent_permission: people['permission'],
+                              classroom: @classroom.label)
+        @people.push(student)
+      else
+        teacher = Teacher.new(age: people['age'], name: people['name'], parent_permission: people['permission'],
+                              specialization: people['specialization'])
+        @people.push(teacher)
+      end
+      @people.last.id = people['id']
+    end
+  end
+
+  def parse_rentals
+    file = 'rentals.json'
+
+    if File.exist? file
+      JSON.parse(File.read(file)).map do |rental|
+        book = @books.find { |rental_book| rental_book.title == rental['book_title'] }
+        person = @people.find { |rental_person| rental_person.id == rental['person_id'] }
+
+        rental = Rental.new(rental['date'], book, person)
+        @rentals.push(rental)
+      end
+    else
+      []
+    end
   end
 end

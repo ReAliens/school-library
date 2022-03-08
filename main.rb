@@ -13,7 +13,10 @@ class App
     loop do
       menu
       option = gets.chomp
-      break if option == '7'
+      if option == '7'
+        store_data
+        break
+      end
 
       get_num option
     end
@@ -29,7 +32,7 @@ class App
           '4 - Create a book 📖',
           '5 - Create a rental 🏠,',
           '6 - List all rentals for a given person id 👨',
-          '7 - Exit 🚫']
+          '7 - Exit && Save🚫']
   end
 
   def get_num(option)
@@ -46,6 +49,8 @@ class App
       create_rental
     when '6'
       list_rentals_by_person_id
+    when '7'
+      store_data
     else
       puts 'Please select a number between 1 and 7. ❌'
     end
@@ -54,6 +59,9 @@ end
 
 def main
   app = App.new
+  app.parse_books
+  app.parse_people
+  app.parse_rentals
   app.start
 end
 main
